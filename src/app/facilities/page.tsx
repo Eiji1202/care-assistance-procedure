@@ -16,10 +16,10 @@ export default async function Page() {
   const facilities = await prisma.facility.findMany();
 
   return (
-    <div className="pt-16 container mx-auto flex flex-col items-center gap-10">
+    <div className="pt-16 container mx-auto flex flex-col items-center gap-10 max-w-[860px] ">
       <Title>運営施設一覧</Title>
       <AddFacilityButton />
-      <div className="w-full max-w-[600px] border rounded-md">
+      <div className="w-full border rounded-md">
         <Table>
           <TableHeader>
             <TableRow>

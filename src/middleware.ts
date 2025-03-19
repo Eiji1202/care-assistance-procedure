@@ -16,10 +16,23 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/facilities', request.url));
   }
 
-  // ログインしていない場合はログインページにリダイレクト
+  // ログインページ自体はアクセス可能に
+  if (path === '/') {
+    return NextResponse.next();
+  }
+
+  // その他のすべてのパスでログインしていない場合はログインページにリダイレクト
   if (!session) {
     return NextResponse.redirect(new URL('/', request.url));
   }
 
   return NextResponse.next();
 }
+
+// 重要: ミドルウェアが適用されるパスを指定
+export const config = {
+  matcher: [
+    '/',
+    '/facilities/:path*',
+  ],
+};

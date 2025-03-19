@@ -20,14 +20,33 @@ const handler = NextAuth({
     }),
   ],
   adapter: PrismaAdapter(prisma),
+  secret: process.env.NEXTAUTH_SECRET,
+  session: {
+    strategy: "jwt",
+    maxAge: 30 * 24 * 60 * 60, // 30日
+  },
   callbacks: {
+    // @visionary.dayドメイン制限を保持
     async signIn({ user }) {
       if (user.email && user.email.endsWith('@visionary.day')) {
         return true;
       }
       return false;
     },
+    async redirect({ url, baseUrl }) {
+      // ベースURLの場合は/facilitiesにリダイレクト
+      if (url === baseUrl || url === `${baseUrl}/`) {
+        return `${baseUrl}/facilities`;
+      }
+
+      // その他の場合、URLをそのまま使用
+      return url;
+    }
   },
+  pages: {
+    signIn: '/',
+    error: '/',
+  }
 });
 
 export { handler as GET, handler as POST };

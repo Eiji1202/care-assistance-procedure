@@ -6,7 +6,7 @@ export default function SignOutButton() {
   const handleSignOut = () => {
     const res = confirm('本当にログアウトしますか？');
     if (!res) return;
-    signOut();
+    signOut({ callbackUrl: '/' });
   };
 
   return (

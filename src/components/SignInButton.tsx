@@ -8,11 +8,24 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { toast } from 'sonner';
+import { useState } from 'react';
+import Loader from './Loader';
 
 export default function SignInButton() {
+  const [isLoading, setIsLoading] = useState(false);
+
   const handleSignIn = async () => {
-    await signIn('google', { callbackUrl: '/facilities' });
-    toast.success('ログインに成功しました');
+    try {
+      setIsLoading(true);
+      await signIn('google', {
+        callbackUrl: `/facilities`,
+        redirect: true,
+      });
+      toast.success('ログインに成功しました');
+    } catch {
+      toast.error('ログインに失敗しました。もう一度お試しください。');
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -23,9 +36,16 @@ export default function SignInButton() {
             onClick={handleSignIn}
             className="flex items-center"
             size="xl"
+            disabled={isLoading}
           >
-            <FaGoogle />
-            ログイン
+            {isLoading ? (
+              <Loader />
+            ) : (
+              <>
+                <FaGoogle />
+                ログイン
+              </>
+            )}
           </Button>
         </TooltipTrigger>
         <TooltipContent>
